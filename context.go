@@ -1,6 +1,7 @@
 package taifn
 
 import (
+	"io"
 	"net/http"
 )
 
@@ -17,8 +18,21 @@ type TaifnLogger interface {
 	Fatalf(format string, args ...interface{})
 }
 
+type KafkaProducer interface {
+	ProduceFull(topic string, key string, value string, Headers map[string]string, brokers []string)
+	ProduceWithHeaders(topic string, key string, value string, Headers map[string]string)
+	Produce(topic string, key string, value string)
+}
+
+type HttpHelper interface {
+	ParseBody(body io.ReadCloser, target interface{})
+	NewError(w http.ResponseWriter, status int, err error)
+}
+
 type TaifnContext interface {
 	Logger() TaifnLogger
+	KafkaProducer() KafkaProducer
+	HttpHelper() HttpHelper
 }
 
 type TaifnHandlerFunc func(http.ResponseWriter, *http.Request, TaifnContext)
