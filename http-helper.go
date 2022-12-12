@@ -6,6 +6,6 @@ import (
 )
 
 type HttpHelper interface {
-	ParseBody(body io.ReadCloser, target interface{})
+	ParseBody(body io.ReadCloser, target interface{}) error
 	NewError(w http.ResponseWriter, status int, err error)
 }
